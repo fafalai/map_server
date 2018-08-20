@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<title>Leaflet</title>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<!-- <link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" /> -->
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js" integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q==" crossorigin=""></script>
+
+
+	
+</head>
+<body>
+
+
+
+<div id="mapid" style="width: 800px; height: 600px;"></div>
+<br/>
+<button onclick="placeMarker()">Marker</button>
+<script>
+	var isMarker = false;
+	var marker = L.marker([-37.8136, 144.9631]);
+
+	var mymap = L.map('mapid', {
+        minZoom: 1,
+        maxZoom: 18,
+        zoom: 13,
+        center: [-37.8136,144.9631]
+    });
+    mymap.on('click', onMapClick);
+
+	//http://geo.infinitee.software:8080/styles/dark-matter/{z}/{x}/{y}.png
+	//http://geo.infinitee.software:8080/styles/osm-bright/{z}/{x}/{y}.png
+	//http://geo.infinitee.software:8080/styles/positron/{z}/{x}/{y}.png
+	//http://geo.infinitee.software:8080/styles/klokantech-basic/{z}/{x}/{y}.png
+
+	var tileLayer = L.tileLayer('http://geo.infinitee.software:8080/styles/{style}/{z}/{x}/{y}.png', {
+		style:'klokantech-basic',
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>'
+	});
+
+	tileLayer.addTo(mymap);
+
+	// var circle = L.circle([-37.82, 144.97], {
+	// 	color: '#CC0000',
+	// 	fillColor: '#CC0000',
+	// 	fillOpacity: 0.3,
+	// 	radius: 600
+	// });
+
+	// circle.addTo(mymap);
+	// circle.bindPopup("I am a circle.");
+
+	// var polygon = L.polygon([ [-37.8062, 145.00],[-37.8140, 144.99],[-37.8017, 144.980]],{
+	// 	color:'black'
+	// });
+
+	// polygon.addTo(mymap);
+	// polygon.bindPopup("I am a polygon.");
+
+	var popup = L.popup();
+	var theMarker = L.marker();
+
+    function onMapClick(e) {
+    	
+        lat = e.latlng.lat;
+        lon = e.latlng.lng;
+
+        theMarker.remove();
+        theMarker.setLatLng([lat,lon]);
+        theMarker.bindPopup("You clicked the map at " + e.latlng.toString());
+        theMarker.addTo(mymap);
+
+	}
+
+	
+
+
+	function placeMarker()
+	{
+		//1. create a feature group first
+		if(!isMarker)
+		{
+			
+			marker.addTo(mymap);
+			marker.bindPopup("<b>Hello world!</b><br>I am a popup.");
+			isMarker = true;
+		}
+		else
+		{
+			console.log("remove the marker");
+			console.log(marker.remove());
+			marker.remove();
+			isMarker = false;
+		}
+		
+	}
+
+
+</script>
+
+
+
+</body>
+</html>
