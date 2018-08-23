@@ -35,40 +35,13 @@
 		crossorigin=""></script>
 	
 	<!-- this demo plugin bundles the needed code from Esri Leaflet and Esri Leaflet Geocoder -->
-	<script src="./js/bootstrap-geocoder.js"></script>
-	<style>
-		.geocoder-control
-		{
-			/* width:275px; */
-			width:26px;
-			height:26px;
-			-webkit-transition:width .175s ease-in;
-			-moz-transition:width .175s ease-in;
-			-ms-transition:width .175s ease-in;
-			-o-transition:width .175s ease-in;
-			transition:width .175s ease-in
-		}
-
-		.geocoder-control-expanded,.leaflet-touch .geocoder-control-expanded
-		{
-			width:275px
-		}
-	</style>	
+	<!-- <script src="./js/bootstrap-geocoder.js"></script> -->	
 </head>
 <body>
 
-	<div id="mapid" style="width: 800px; height: 0px;"></div>
+	<div id="mapid" style="width:800px;height:600px;display: block"></div>
 
 	<div id="details" style="margin-top: 20px">
-
-		<input class="form-control"
-          type="text"
-          id="address"
-          autocomplete="off"
-          autofocus
-        />
-		
-		<br/>
 		Address: <input type="text" placeholder="address" id="address"/> 
 		
 		<br/>
@@ -81,99 +54,175 @@
 		Country: <input type="text" placeholder="country" id="country"/>
 		<br/>
 	</div>
+
+
+	<table id="addressTable" style="margin-top:30px;width: 800px;">
+		<tr>
+			<td colspan="4" style="width:100%" align="left" valign="top">
+				<input class="form-control" placeholder="Address" style="width:800px"
+					type="text"
+					id="address2"
+					autocomplete="off"
+					autofocus
+				/>
+			</td>
+		</tr>
+		<tr style="margin-top:20px">
+			<td style="width:25%">
+				<input id="city2" name="city2" type="text" size="40" placeholder="CITY" class="form-control" />
+			</td>
+			<td align="left" style="width:25%">
+				<!-- <select id="fldState" name="fldState" class="form-control"></select> -->
+				<input class="form-control" id="state2" name="state2" type="text"  placeholder="STATE" size="40"/>
+			</td>
+			<td align="left" valign="top" style="width:25%">
+				<input id="postcode2" name="postcode2" type="text" size="8" placeholder="P/CODE" class="form-control" />
+			</td>
+			<td align="left" valign="top" style="width: 25%">
+				<input class="form-control" id="country2" name="country2" type="text"  placeholder="COUNTRY" size="40" />
+			</td>
+		</tr>
+	</table>
+
+	<!-- <div id="searchDIV" style="margin-top: 30px">
+		Address: <input class="form-control" style="width:300px;display: inline-block;"
+          type="text"
+          id="address2"
+          autocomplete="off"
+          autofocus
+		/>
+		<br/>
+		City: <input type="text" class="form-control" style="width:300px;display: inline-block;" placeholder="city" id="city2"/>
+		<br/>
+		State: <input type="text" class="form-control" style="width:300px;display: inline-block;" placeholder="state" id="state2"/>
+		<br/>
+		Postcode: <input type="text" class="form-control" style="width:300px;display: inline-block;" placeholder="postcode" id="postcode2"/>
+		<br/>
+		Country: <input type="text" class="form-control" style="width:300px;display: inline-block;" placeholder="country" id="country2"/>
+		<br/>
+
+	</div> -->
 	
 	<!-- <button onclick="placeMarker()">Marker</button> -->
-<script>
-	
-	var geocodeService = L.esri.Geocoding.geocodeService();
-	var theMarker = L.marker();
-	var popup = L.popup();
-	var isMarker = false;
-	var currentPositionCoords;
-	var currentLong;
-	var currentLat;
-	var mymap;
-	var coords = new Array();
-
-	initGeolocation();
-	setTimeout(function(){
-		initMap();
-	 },3000)
-
-
-
-
-	function initGeolocation()
-     {
+	<!-- <script>
 		
-        if( navigator.geolocation )
-        {
-           // Call getCurrentPosition with success and failure callbacks
-           navigator.geolocation.getCurrentPosition(
-			function(position){
-				//    console.log("hello");
-				//    console.log(position);
-				coords[0] = position.coords.longitude;
-				coords[1] = position.coords.latitude;
-			}, 
-			function(err){
+		var geocodeService = L.esri.Geocoding.geocodeService();
+		var theMarker = L.marker();
+		var popup = L.popup();
+		var isMarker = false;
+		var currentPositionCoords;
+		var currentLong;
+		var currentLat;
+		var mymap;
+		var coords = new Array();
+
+		initGeolocation();
+		setTimeout(function(){
+			initMap();
+		},4000)
+
+
+
+
+		function initGeolocation()
+		{
+			
+			if( navigator.geolocation )
+			{
+			// Call getCurrentPosition with success and failure callbacks
+			navigator.geolocation.getCurrentPosition(
+				function(position){
+					//    console.log("hello");
+					//    console.log(position);
+					coords[0] = position.coords.longitude;
+					coords[1] = position.coords.latitude;
+				}, 
+				function(err){
 					coords[0] = 144.9631;
 					coords[1] = -37.8136;
-			} 
-		   );
-        }
-        else
-        {
-           	console.log("Sorry, your browser does not support geolocation services.use fixed geocode to display map");
-		   	coords[0] = 144.9631;
-			coords[1] = -37.8136;
-        }
-     }
+				} 
+			);
+			}
+			else
+			{
+				console.log("Sorry, your browser does not support geolocation services.use fixed geocode to display map");
+				coords[0] = 144.9631;
+				coords[1] = -37.8136;
+			}
+		}
 
-	//  setTimeout(function(){
-	// 	//var currentCoords = initGeolocation();
-	// 	console.log(coords[0] + " " +  coords[1]);
-	//  },3000)
+		//  setTimeout(function(){
+		// 	//var currentCoords = initGeolocation();
+		// 	console.log(coords[0] + " " +  coords[1]);
+		//  },3000)
 
 
-	function initMap()
-	{
-		var latLng = L.latLng({lat: coords[1], lng: coords[0]});
-		console.log(latLng);
-		mymap = L.map('mapid', {
-			minZoom: 1,
-			maxZoom: 18,
-			zoom: 12,
-			center: latLng
-		});
-		// var tiles = L.esri.basemapLayer("Streets").addTo(map);
-			var tileLayer = L.tileLayer('http://geo.infinitee.software:8080/styles/{style}/{z}/{x}/{y}.png', {
-			style:'klokantech-basic',
-			maxZoom: 18,
-			attribution: 'Map data &copy; <a href="https://openmaptiles.com/production-package/">OpenMapTiles</a> contributors, '
-		});
-		tileLayer.addTo(mymap);
+		function initMap()
+		{
+			var latLng = L.latLng({lat: coords[1], lng: coords[0]});
+			// var latLng = L.latLng({lat: -37.8136, lng: 144.9631});
+			console.log(latLng);
+			mymap = L.map('mapid', {
+				minZoom: 1,
+				maxZoom: 18,
+				zoom: 12,
+				center: latLng
+			});
+			// var tiles = L.esri.basemapLayer("Streets").addTo(map);
+				var tileLayer = L.tileLayer('http://geo.infinitee.software:8080/styles/{style}/{z}/{x}/{y}.png', {
+				style:'klokantech-basic',
+				maxZoom: 18,
+				attribution: 'Map data &copy; <a href="https://openmaptiles.com/production-package/">OpenMapTiles</a> contributors, '
+			});
+			tileLayer.addTo(mymap);
 
-		//console.log(mymap.getBounds());
+			// console.log(mymap.getCenter());
+			// console.log(mymap.getCenter().toBounds(20000));
 
-		 // create the geocoding control and add it to the map
+			// create the geocoding control and add it to the map
 
-    	var searchControl = L.esri.Geocoding.geosearch({useMapBounds:false}).addTo(mymap);
+			var searchControl = L.esri.Geocoding.geosearch({useMapBounds:false}).addTo(mymap);
 
-		var search3 = BootstrapGeocoder.search({
-			inputTag: 'address',
-			placeholder: 'type in address to find match'
-		}).addTo(mymap);
+			var search3 = BootstrapGeocoder.search({
+				inputTag: 'address2',
+				placeholder: 'Address',
+				useMapBounds:false,
+				searchBounds:mymap.getCenter().toBounds(100000)
+			}).addTo(mymap);
 
-		// create an empty layer group to store the results and add it to the map
-		var results = L.layerGroup().addTo(mymap);
-		// listen for the results event and add every result to the map
-		searchControl.on("results", function(data) {
-		    results.clearLayers();
-			//console.log(data);
-		    for (var i = data.results.length - 1; i >= 0; i--) {
-				// console.log(data.results);
-		        // results.addLayer(L.marker(data.results[i].latlng));
+			// create an empty layer group to store the results and add it to the map
+			var results = L.layerGroup().addTo(mymap);
+			// listen for the results event and add every result to the map
+			searchControl.on("results", function(data) {
+				results.clearLayers();
+				//console.log(data);
+				for (var i = data.results.length - 1; i >= 0; i--) {
+					// console.log(data.results);
+					// results.addLayer(L.marker(data.results[i].latlng));
+					//console.log(i);
+					// console.log(data.results[i].latlng);
+					// console.log(data.results[i].text);
+					// console.log("Country: " + data.results[i].properties.Country);
+					// console.log("City: " +  data.results[i].properties.City);
+					// console.log("Region: " + data.results[i].properties.Region);
+					// console.log("Postcode: " + data.results[i].properties.Postal);
+					// console.log("Address: " + data.results[i].properties.StAddr);
+					$("#address").val(data.results[i].properties.StAddr);
+					$("#city").val(data.results[i].properties.City);
+					$("#state").val(data.results[i].properties.Region);
+					$("#postcode").val(data.results[i].properties.Postal);
+					$("#country").val(data.results[i].properties.Country);
+					var marker = L.marker(data.results[i].latlng);
+					results.addLayer(marker);
+					marker.bindPopup(data.results[i].text).openPopup();
+				}
+			});
+
+
+			search3.on('results', function(data){
+				for (var i = data.results.length - 1; i >= 0; i--) {
+				console.log(data.results);
+				// results.addLayer(L.marker(data.results[i].latlng));
 				//console.log(i);
 				// console.log(data.results[i].latlng);
 				// console.log(data.results[i].text);
@@ -182,77 +231,54 @@
 				// console.log("Region: " + data.results[i].properties.Region);
 				// console.log("Postcode: " + data.results[i].properties.Postal);
 				// console.log("Address: " + data.results[i].properties.StAddr);
-				$("#address").val(data.results[i].properties.StAddr);
-				$("#city").val(data.results[i].properties.City);
-				$("#state").val(data.results[i].properties.Region);
-				$("#postcode").val(data.results[i].properties.Postal);
-				$("#country").val(data.results[i].properties.Country);
-				var marker = L.marker(data.results[i].latlng);
-				results.addLayer(marker);
-				marker.bindPopup(data.results[i].text).openPopup();
-		    }
-		});
-
-
-		search3.on('results', function(data){
-			for (var i = data.results.length - 1; i >= 0; i--) {
-			console.log(data.results);
-			// results.addLayer(L.marker(data.results[i].latlng));
-			//console.log(i);
-			// console.log(data.results[i].latlng);
-			// console.log(data.results[i].text);
-			// console.log("Country: " + data.results[i].properties.Country);
-			// console.log("City: " +  data.results[i].properties.City);
-			// console.log("Region: " + data.results[i].properties.Region);
-			// console.log("Postcode: " + data.results[i].properties.Postal);
-			// console.log("Address: " + data.results[i].properties.StAddr);
-			$("#address").val(data.results[i].properties.StAddr);
-			$("#city").val(data.results[i].properties.City);
-			$("#state").val(data.results[i].properties.Region);
-			$("#postcode").val(data.results[i].properties.Postal);
-			$("#country").val(data.results[i].properties.Country);
-			var marker = L.marker(data.results[i].latlng);
-			results.addLayer(marker);
-			marker.bindPopup(data.results[i].text).openPopup();
-		}
-		});
-
-		mymap.on('click', function(e){
-			geocodeService.reverse().latlng(e.latlng).run(function(error, result){
-				//console.log(result.address);
-				theMarker['options']['draggable'] = true;
-				// console.log(theMarker['options']);
-				theMarker.remove();
-				theMarker.setLatLng(result.latlng);
-				theMarker.addTo(mymap);
-				theMarker.bindPopup(result.address.LongLabel).openPopup();
+				$("#address2").val(data.results[i].properties.StAddr);
+				$("#city2").val(data.results[i].properties.Nbrhd);
+				$("#state2").val(data.results[i].properties.Region);
+				$("#postcode2").val(data.results[i].properties.Postal);
+				$("#country2").val(data.results[i].properties.Country);
+				// var marker = L.marker(data.results[i].latlng);
+				// results.addLayer(marker);
+				// marker.bindPopup(data.results[i].text).openPopup();
+			}
 			});
-		});
-	}
-	
-	function placeMarker()
-	{
-		//1. create a feature group first
-		if(!isMarker)
-		{
-			
-			theMarker.addTo(mymap);
-			theMarker.bindPopup("<b>Hello world!</b><br>I am a popup.");
-			isMarker = true;
-		}
-		else
-		{
-			console.log("remove the marker");
-			console.log(theMarker.remove());
-			theMarker.remove();
-			isMarker = false;
+
+			mymap.on('click', function(e){
+				geocodeService.reverse().latlng(e.latlng).run(function(error, result){
+					//console.log(result.address);
+					theMarker['options']['draggable'] = true;
+					// console.log(theMarker['options']);
+					theMarker.remove();
+					theMarker.setLatLng(result.latlng);
+					theMarker.addTo(mymap);
+					theMarker.bindPopup(result.address.LongLabel).openPopup();
+				});
+			});
 		}
 		
-	}
+		function placeMarker()
+		{
+			//1. create a feature group first
+			if(!isMarker)
+			{
+				
+				theMarker.addTo(mymap);
+				theMarker.bindPopup("<b>Hello world!</b><br>I am a popup.");
+				isMarker = true;
+			}
+			else
+			{
+				console.log("remove the marker");
+				console.log(theMarker.remove());
+				theMarker.remove();
+				isMarker = false;
+			}
+			
+		}
 
-</script>
+	</script> -->
 
-
-
+	<script src="./js/bootstrap-geocoder.js"></script>
+	<!-- <script src="./js/GeosearchInput.js"></script> -->
+	<script src="./js/general.js"></script>
 </body>
 </html>
